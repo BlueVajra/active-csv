@@ -29,4 +29,14 @@ describe ActiveCSV::Base do
     end
   end
 
+  describe "nil attributes" do
+    it "returns nil if the attributes is nil" do
+      row = CSV::Row.new(["name", "age"], ["joe", "24"])
+
+      active_csv = ActiveCSV::Base.new(row)
+
+      expect(active_csv.sex).to eq(nil)
+    end
+  end
+
 end
