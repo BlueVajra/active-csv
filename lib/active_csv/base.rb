@@ -34,6 +34,11 @@ module ActiveCSV
       csv.first
     end
 
+    def self.last
+      csv = CSV.read(self.file_path, headers: true)
+      csv[csv.length-1]
+    end
+
     def method_missing(method_name)
       @csv[method_name.to_s] || super
     end

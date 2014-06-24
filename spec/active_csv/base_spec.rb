@@ -66,6 +66,16 @@ describe ActiveCSV::Base do
 
       expect(actual).to eq expected
     end
+
+    it ".last returns object for last row" do
+      class MyClass < ActiveCSV::Base
+        self.file_path = File.absolute_path("spec/fixtures/sample.csv")
+      end
+      actual = MyClass.last
+      expected = CSV::Row.new(["id", "first_name"], ["5", "Bob"])
+
+      expect(actual).to eq expected
+    end
   end
 
 end
