@@ -93,6 +93,23 @@ describe ActiveCSV::Base do
 
       expect(actual).to eq expected
     end
+
+    it ".order returns sorted array of objects where proc is order field" do
+      class MyClass < ActiveCSV::Base
+        self.file_path = File.absolute_path("spec/fixtures/sample.csv")
+      end
+      id = Proc.new do |x,y|
+        x.id <=> y.id
+      end
+      actual = MyClass.order(id)
+      expected = [
+        CSV::Row.new(["id", "first_name"], ["3", "Bob"]),
+        CSV::Row.new(["id", "first_name"], ["4", "Joe"]),
+        CSV::Row.new(["id", "first_name"], ["5", "Bob"])
+      ]
+
+      expect(actual).to eq expected
+    end
   end
 
 end

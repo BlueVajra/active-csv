@@ -47,6 +47,13 @@ module ActiveCSV
       end
     end
 
+    def self.order(code)
+      csv = CSV.read(self.file_path, headers: true)
+      csv.sort do |x,y|
+        code.call(self.new(x),self.new(y))
+      end
+    end
+
     def method_missing(method_name)
       @csv[method_name.to_s] || super
     end
