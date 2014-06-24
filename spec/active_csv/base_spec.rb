@@ -43,4 +43,19 @@ describe ActiveCSV::Base do
     expect(active_csv.first_name).to eq("Joe")
   end
 
+  describe ".all" do
+    it "returns array of all csv rows" do
+      class MyClass < ActiveCSV::Base
+        self.file_path = File.absolute_path("spec/fixtures/sample.csv")
+      end
+      actual = MyClass.all
+      expected = [
+        CSV::Row.new(["id", "first_name"], ["4", "Joe"]),
+        CSV::Row.new(["id", "first_name"], ["5", "Bob"])
+      ]
+
+      expect(actual).to eq expected
+    end
+  end
+
 end

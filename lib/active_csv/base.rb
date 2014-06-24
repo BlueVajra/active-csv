@@ -2,6 +2,7 @@ require 'csv'
 
 module ActiveCSV
   class Base
+    @@file_path
     def initialize(csv="")
       if csv != ""
         edited_csv = normalizeHeaders(csv)
@@ -9,16 +10,23 @@ module ActiveCSV
       else
         @csv = csv
       end
-
-      @file_path
     end
 
     def self.file_path
-      @file_path
+      @@file_path
     end
 
     def self.file_path=(path)
-      @file_path = path
+      @@file_path = path
+    end
+
+    def self.all
+      array_of_rows = []
+      csv = CSV.read(self.file_path, headers: true)
+      csv.each do |row|
+        array_of_rows << row
+      end
+      array_of_rows
     end
 
     def method_missing(method_name)
@@ -26,7 +34,7 @@ module ActiveCSV
     end
 
     def respond_to_missing?(method_name)
-      !@csv[method_name].nil? || super
+      !@csv[method_name.to_s].nil? || super
     end
 
     private
