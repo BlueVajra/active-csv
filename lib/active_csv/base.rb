@@ -3,7 +3,13 @@ require 'csv'
 module ActiveCSV
   class Base
     def initialize(csv="")
-      @csv = csv
+      if csv != ""
+        edited_csv = normalizeHeaders(csv)
+        @csv = CSV::Row.new(edited_csv[0], edited_csv[1])
+      else
+        @csv = csv
+      end
+
       @file_path
     end
 
@@ -21,6 +27,16 @@ module ActiveCSV
 
     def respond_to_missing?(method_name)
       !@csv[method_name].nil? || super
+    end
+
+    private
+
+    def normalizeHeaders(csv)
+      transposed_csv = csv.to_a.transpose
+      transposed_csv[0].map! do |header|
+        header.downcase.strip.gsub(/\s+/, "_")
+      end
+      transposed_csv
     end
   end
 end

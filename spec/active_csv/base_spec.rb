@@ -29,14 +29,18 @@ describe ActiveCSV::Base do
     end
   end
 
-  describe "nil attributes" do
-    it "returns nil if the attributes is nil" do
-      row = CSV::Row.new(["name", "age"], ["joe", "24"])
+  it "returns nil if the attributes is nil" do
+    row = CSV::Row.new(["name", "age"], ["joe", "24"])
 
-      active_csv = ActiveCSV::Base.new(row)
+    active_csv = ActiveCSV::Base.new(row)
 
-      expect(active_csv.sex).to eq(nil)
-    end
+    expect(active_csv.sex).to eq(nil)
+  end
+
+  it "normalizes field headers" do
+    row = CSV::Row.new(["FIrst   NAme  "], ["Joe"])
+    active_csv = ActiveCSV::Base.new(row)
+    expect(active_csv.first_name).to eq("Joe")
   end
 
 end
