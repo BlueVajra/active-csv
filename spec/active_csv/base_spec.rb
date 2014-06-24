@@ -43,6 +43,18 @@ describe ActiveCSV::Base do
     expect(active_csv.first_name).to eq("Joe")
   end
 
+  it "can remove prefixes to column names" do
+    class MyClass < ActiveCSV::Base
+      self.field_prefix = :usr_
+    end
+
+    instance = MyClass.new(CSV::Row.new(["usr_name", "usr_email"], ["jexample", "joe@example.com"]))
+    actual = instance.name
+    expected = "jexample"
+
+    expect(actual).to eq expected
+  end
+
   describe "class methods" do
     it ".all returns array of all csv rows" do
       class MyClass < ActiveCSV::Base

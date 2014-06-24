@@ -2,7 +2,8 @@ require 'csv'
 
 module ActiveCSV
   class Base
-    @@file_path
+    @@file_path = ""
+    @@field_prefix = ""
     def initialize(csv="")
       if csv != ""
         edited_csv = normalizeHeaders(csv)
@@ -18,6 +19,10 @@ module ActiveCSV
 
     def self.file_path=(path)
       @@file_path = path
+    end
+
+    def self.field_prefix=(prefix)
+      @@field_prefix = prefix
     end
 
     def self.all
@@ -67,7 +72,7 @@ module ActiveCSV
     def normalizeHeaders(csv)
       transposed_csv = csv.to_a.transpose
       transposed_csv[0].map! do |header|
-        header.downcase.strip.gsub(/\s+/, "_")
+        header.downcase.strip.gsub(/\s+/, "_").gsub(@@field_prefix.to_s, "")
       end
       transposed_csv
     end
