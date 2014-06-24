@@ -29,12 +29,12 @@ describe ActiveCSV::Base do
     end
   end
 
-  it "returns nil if the attributes is nil" do
+  it "returns error if the attributes don't exist" do
     row = CSV::Row.new(["name", "age"], ["joe", "24"])
 
     active_csv = ActiveCSV::Base.new(row)
 
-    expect(active_csv.sex).to eq(nil)
+    expect {active_csv.sex}.to raise_error(NoMethodError)
   end
 
   it "normalizes field headers" do

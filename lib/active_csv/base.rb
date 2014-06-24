@@ -22,7 +22,7 @@ module ActiveCSV
     end
 
     def method_missing(method_name)
-      @csv[method_name.to_s] || nil
+      @csv[method_name.to_s] || super
     end
 
     def respond_to_missing?(method_name)
