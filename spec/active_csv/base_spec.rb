@@ -34,7 +34,7 @@ describe ActiveCSV::Base do
 
     active_csv = ActiveCSV::Base.new(row)
 
-    expect {active_csv.sex}.to raise_error(NoMethodError)
+    expect { active_csv.sex }.to raise_error(NoMethodError)
   end
 
   it "normalizes field headers" do
@@ -51,6 +51,7 @@ describe ActiveCSV::Base do
       actual = MyClass.all
       expected = [
         CSV::Row.new(["id", "first_name"], ["4", "Joe"]),
+        CSV::Row.new(["id", "first_name"], ["3", "Bob"]),
         CSV::Row.new(["id", "first_name"], ["5", "Bob"])
       ]
 
@@ -73,6 +74,22 @@ describe ActiveCSV::Base do
       end
       actual = MyClass.last
       expected = CSV::Row.new(["id", "first_name"], ["5", "Bob"])
+
+      expect(actual).to eq expected
+    end
+
+    it ".where returns filtered array of objects where proc is true" do
+      class MyClass < ActiveCSV::Base
+        self.file_path = File.absolute_path("spec/fixtures/sample.csv")
+      end
+      bob = Proc.new do |row|
+        row.first_name=="Bob"
+      end
+      actual = MyClass.where(bob)
+      expected = [
+        CSV::Row.new(["id", "first_name"], ["3", "Bob"]),
+        CSV::Row.new(["id", "first_name"], ["5", "Bob"])
+      ]
 
       expect(actual).to eq expected
     end

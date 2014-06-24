@@ -39,6 +39,14 @@ module ActiveCSV
       csv[csv.length-1]
     end
 
+    def self.where(code)
+      csv = CSV.read(self.file_path, headers: true)
+      csv.select do |row|
+        new_row = self.new(row)
+        code.call(new_row)
+      end
+    end
+
     def method_missing(method_name)
       @csv[method_name.to_s] || super
     end
